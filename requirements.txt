@@ -8,3 +8,4 @@ Flask-Migrate==4.0.5
 python-dotenv==1.0.0
 PyMySQL==1.1.0
 gunicorn
+email_validator
