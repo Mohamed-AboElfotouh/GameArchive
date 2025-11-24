@@ -1124,7 +1124,7 @@ def genre_detail(genre_type, name):
 
     genres_sql = f"""
         SELECT AVG(gp.AvgCriticRatingPercentage) as AvgCritic, 
-        SUM(gp.TotalPlayerRating) / NULLIF(SUM(gp.NumPlayersRated), 0) as AvgUser
+        SUM(gp.TotalPlayerRating) / SUM(gp.NumPlayersRated) as AvgUser
         FROM GamesPlatform gp
         INNER JOIN {game_table} gt ON gp.GameID = gt.GameID
         WHERE gt.{table_name} = :name
