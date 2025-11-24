@@ -1,0 +1,124 @@
+{% extends "my_base.html" %}
+
+{% block title %}Games - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Games Section -->
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-2">Games</h1>
+        <p>You are now seeing {{ games.total }} games from the GameArchive database</p>
+
+        <!-- Filter Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Filters</h5>
+                <form method="GET" class="row g-3">
+                    <!-- Order By -->
+                    <div class="col-md-4">
+                        <label for="order_by" class="form-label">Order By</label>
+                        <select class="form-select" id="order_by" name="order_by">
+                            <option value="None" {% if selected_order == 'None' %}selected{% endif %}>None (A-Z)</option>
+                            <option value="MobyScore" {% if selected_order == 'MobyScore' %}selected{% endif %}>Moby Score</option>
+                            <option value="CriticRating" {% if selected_order == 'CriticRating' %}selected{% endif %}>Critic Rating</option>
+                            <option value="UserRating" {% if selected_order == 'UserRating' %}selected{% endif %}>User Rating</option>
+                        </select>
+                    </div>
+
+                    <!-- Year -->
+                    <div class="col-md-4">
+                        <label for="year" class="form-label">Year</label>
+                        <select class="form-select" id="year" name="year">
+                            <option value="All" {% if selected_year == 'All' %}selected{% endif %}>All Years</option>
+                            {% for y in years %}
+                                <option value="{{ y }}" {% if selected_year == y|string %}selected{% endif %}>{{ y }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Genre -->
+                    <div class="col-md-4">
+                        <label for="genre" class="form-label">Genre</label>
+                        <select class="form-select" id="genre" name="genre">
+                            <option value="All" {% if selected_genre == 'All' %}selected{% endif %}>All Genres</option>
+                            {% for g in genres %}
+                                <option value="{{ g }}" {% if selected_genre == g %}selected{% endif %}>{{ g }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-12">
+                        <button type="submit" class="btn" style="background-color: var(--important-text); color: white;">Apply Filters</button>
+                        <a href="{{ url_for('main.games') }}" class="btn btn-secondary">Clear Filters</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if games.items %}
+            <!-- Games Grid -->
+            <div class="row g-4 mb-5">
+                {% for game in games.items %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <a class="game-card_link" href="{{ url_for('main.game_detail', game_id=game.ID) }}">
+                        <div class="card h-100 shadow-sm game-card">
+                            {% if game.CoverPhoto %}
+                                <img src="{{ game.CoverPhoto }}" class="card-img-top" alt="{{ game.Name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                                    <p class="text-muted">No Cover Photo</p>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--regular-text);">{{ game.Name }}</h5>
+                                {% if game.MobyScore %}
+                                    <span class="badge" style="background-color: var(--regular-text);">{{ game.MobyScore }}/10</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if games.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.games', page=games.prev_num, order_by=selected_order, year=selected_year, genre=selected_genre) }}">← Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">← Previous</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ games.page }} of {{ games.pages }}</span>
+                    </li>
+
+                    {% if games.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.games', page=games.next_num, order_by=selected_order, year=selected_year, genre=selected_genre) }}">Next →</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next →</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>No games found matching your filters.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{{ super() }}
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "my_base.html" %}
+
+
+
+{% block title %}Companies - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Games Section -->
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-2">Companies</h1>
+        <p>Browse all {{ companies.total }} companies in the GameArchive database</p>
+
+        {% if companies.items %}
+            <div class="row g-4 mb-5">
+                {% for company in companies.items %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <a class="game-card_link" href="{{ url_for('main.company_detail', company_id=company.ID) }}">
+                        <div class="card h-100 shadow-sm game-card">
+                            {% if company.Logo %}
+                                <img src="{{ company.Logo }}" class="card-img-top" alt="{{ company.Name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                                    <p class="text-muted">No Logo</p>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--regular-text);">{{ company.Name }}</h5>
+                                {% if company.developed_games_num and company.published_games_num %}
+                                    <span class="badge" style="background-color: var(--regular-text);">{{ company.developed_games_num }} games developed, {{ company.published_games_num }} games published</span>
+                                {% elif company.developed_games_num %}
+                                    <span class="badge" style="background-color: var(--regular-text);">{{ company.developed_games_num }} games developed</span>
+                                {% else %}
+                                    <span class="badge" style="background-color: var(--regular-text);">{{ company.published_games_num }} games published</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if companies.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.companies', page=companies.prev_num) }}">← Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">← Previous</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ companies.page }} of {{ companies.pages }}</span>
+                    </li>
+
+                    {% if companies.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.companies', page=companies.next_num) }}">Next →</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next →</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>No companies found.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{{ super() }}
+{% endblock %}

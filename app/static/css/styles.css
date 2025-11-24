@@ -1,0 +1,307 @@
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray: #d3d3d3;
+    --important-text: #4A70A9;
+    --regular-text: #8FABD4;
+    --background-color: EFECE3;
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    line-height: 1.6;
+}
+
+main {
+            flex: 1;
+        }
+
+.content {
+	 display: flex;
+	 margin: 0 auto;
+	 justify-content: center;
+	 align-items: center;
+	 flex-wrap: wrap;
+	 max-width: 1500px;
+}
+
+h1 {
+    font-size: 3.5em;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--important-text);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    margin-left: 1rem;
+    letter-spacing: 0.1ch;
+    line-height: 1;
+    padding-bottom: 0.5em;
+    position: relative;
+}
+
+p {
+    color: var(--regular-text);
+    margin-bottom: 1rem;
+}
+
+a {
+    color: #0000EE;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: #0073ee;
+}
+
+.game-card:hover {
+        background-color: #d3d3d3 !important;
+    }
+nav {
+    background-color: var(--black);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    min-height: 80px;
+}
+
+nav .logo {
+    height: 50px;
+    width: auto;
+    margin-right: 2rem;
+}
+
+nav .container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+}
+
+nav .container ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+nav .container li {
+    display: flex;
+    align-items: center;
+}
+
+nav .container a {
+    color: var(--white);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+nav .container a:hover {
+    color: var(--important-text);
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-custom {
+    background-color: var(--important-text);
+    color: var(--white);
+    padding: 12px 30px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-custom:hover {
+    background-color: var(--black);
+    color: var(--important-text);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+}
+
+.btn-custom:active {
+    transform: translateY(0);
+}
+
+
+.hero {
+    background: transparent;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-content {
+    animation: fadeInUp 0.8s ease;
+}
+
+.hero h1 {
+    font-size: 3.5em;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.3em;
+    margin-bottom: 2rem;
+}
+
+.hero .button-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: #1e4620;
+    border-color: #28a745;
+    color: #6bce6d;
+}
+
+.alert-error,
+.alert-danger {
+    background-color: #4a1f1f;
+    border-color: var(--primary-red);
+    color: #ff6b6b;
+}
+
+.alert-warning {
+    background-color: #5a4a1f;
+    border-color: #ffc107;
+    color: #ffd966;
+}
+
+.alert-info {
+    background-color: #1f3a4a;
+    border-color: #17a2b8;
+    color: #66d9ff;
+}
+
+footer {
+    background-color: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 2rem;
+    margin-top: auto;
+    box-shadow: var(--shadow);
+}
+
+footer p {
+    margin: 0.5rem 0;
+    color: var(--white);
+}
+
+footer a {
+    color: var(--important-text);
+}
+
+footer a:hover {
+    color: var(--regular-text);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero .button-group {
+        flex-direction: column;
+    }
+
+    .hero .btn {
+        width: 100%;
+    }
+
+    nav ul {
+        gap: 1rem;
+    }
+
+    nav .container {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.5rem;
+    }
+
+    .hero p {
+        font-size: 1em;
+    }
+
+    nav ul {
+        gap: 0.5rem;
+        font-size: 0.9em;
+    }
+}

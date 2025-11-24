@@ -1,0 +1,361 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .top5-header {
+        background: var(--regular-text);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .top5-header h1 {
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        color: var(--black);
+    }
+
+    .top5-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .top5-header a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 1rem;
+        display: inline-block;
+    }
+
+    .top5-header a:hover {
+        text-decoration: underline;
+    }
+
+    .collaborations-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .collaboration-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        padding: 2rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+    }
+
+    .collaboration-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .rank-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--important-text);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.3rem;
+        z-index: 10;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .collaboration-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .card-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        transition: transform 0.3s ease;
+    }
+
+    .card-link:hover {
+        transform: scale(1.05);
+    }
+
+    /* Director Card */
+    .director-card {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #dee2e6;
+    }
+
+    .director-card .card-link:hover {
+        color: var(--important-text);
+    }
+
+    .director-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 4px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .director-image-placeholder {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        border: 4px solid white;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .director-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #212529;
+        word-break: break-word;
+    }
+
+    .director-role {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    /* Company Card */
+    .company-card {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px solid #dee2e6;
+    }
+
+    .company-card .card-link:hover {
+        color: var(--important-text);
+    }
+
+    .company-logo {
+        max-width: 120px;
+        max-height: 120px;
+        object-fit: contain;
+        margin-bottom: 1rem;
+    }
+
+    .company-logo-placeholder {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .company-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #212529;
+        word-break: break-word;
+        margin-bottom: 0.5rem;
+    }
+
+    .company-country {
+        font-size: 0.9rem;
+        color: #6c757d;
+        font-weight: 500;
+    }
+
+    .company-country:before {
+        content: "📍 ";
+    }
+
+    .collaboration-stat {
+        text-align: center;
+        padding: 1.5rem;
+        background-color: var(--regular-text);
+        border-radius: 8px;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        opacity: 0.9;
+    }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+    .no-collaborations {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stats-info {
+        background-color: #f8f9fa;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid var(--important-text);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+    }
+
+    .stats-info strong {
+        color: var(--important-text);
+    }
+
+    .back-button {
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 2rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #c82333;
+        text-decoration: none;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .collaboration-content {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block title %}Top 5 Director-Company Collaborations - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="top5-header">
+    <div class="container">
+        <h1>🤝 Top 5 Director-Company Collaborations</h1>
+        <p>The most prolific director and development company partnerships</p>
+        <a href="{{ url_for('main.top5') }}">← Back to Top 5 Rankings</a>
+    </div>
+</div>
+
+<!-- Rankings -->
+<div class="container pb-5">
+
+    {% if collaborations_data %}
+
+        <div class="collaborations-container">
+            {% for collab in collaborations_data %}
+                <div class="collaboration-card">
+                    <div class="rank-badge">#{{ loop.index }}</div>
+
+                    <!-- Director and Company Cards -->
+                    <div class="collaboration-content">
+                        <!-- Director Card -->
+                        <div class="card-item">
+                            <a href="{{ url_for('main.director_detail', director_id=collab.DirectorID) }}" class="card-link">
+                                <div class="director-card">
+                                    {% if collab.ProfilePicture %}
+                                        <img src="{{ collab.ProfilePicture }}" alt="{{ collab.DirectorName }}" class="director-image">
+                                    {% else %}
+                                        <div class="director-image-placeholder">
+                                            <p class="m-0">No Image</p>
+                                        </div>
+                                    {% endif %}
+                                    <div class="director-name">{{ collab.DirectorName }}</div>
+                                    <div class="director-role">Director</div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Company Card -->
+                        <div class="card-item">
+                            <a href="{{ url_for('main.company_detail', company_id=collab.DeveloperID) }}" class="card-link">
+                                <div class="company-card">
+                                    {% if collab.Logo %}
+                                        <img src="{{ collab.Logo }}" alt="{{ collab.DeveloperName }}" class="company-logo">
+                                    {% else %}
+                                        <div class="company-logo-placeholder">
+                                            <p class="m-0">No Logo</p>
+                                        </div>
+                                    {% endif %}
+                                    <div class="company-name">{{ collab.DeveloperName }}</div>
+                                    {% if collab.Country %}
+                                        <div class="company-country">{{ collab.Country }}</div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Games Collaborated Stat -->
+                    <div class="collaboration-stat">
+                        <div class="stat-label">Games Collaborated</div>
+                        <div class="stat-value">{{ collab.games_collaborated }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-collaborations">
+            <h4>No Collaborations Available</h4>
+            <p>There are no director-company collaborations at this time.</p>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

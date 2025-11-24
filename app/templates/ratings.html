@@ -1,0 +1,82 @@
+{% extends "my_base.html" %}
+
+
+
+{% block title %}{{ username }} Rated Games - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Games Section -->
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-2">Ratings</h1>
+        {% if games.total == 1 %}
+        <p>You have rated {{ games.total }} game in the GameArchive database</p>
+        {% else %}
+        <p>You have rated {{ games.total }} games in the GameArchive database</p>
+        {% endif %}
+        {% if games.items %}
+            <!-- Games Grid -->
+            <div class="row g-4 mb-5">
+                {% for game in games.items %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <a class="game-card_link" href="{{ url_for('main.game_detail', game_id=game.ID) }}">
+                        <div class="card h-100 shadow-sm game-card">
+                            {% if game.CoverPhoto %}
+                                <img src="{{ game.CoverPhoto }}" class="card-img-top" alt="{{ game.Name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                                    <p class="text-muted">No Cover Photo</p>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--regular-text);">{{ game.Name }}</h5>
+                                {% if game.Rating %}
+                                    <span class="badge" style="background-color: var(--regular-text);">{{ game.Rating }}/5</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if games.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.games', page=games.prev_num) }}">← Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">← Previous</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ games.page }} of {{ games.pages }}</span>
+                    </li>
+
+                    {% if games.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.games', page=games.next_num) }}">Next →</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next →</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>No games found.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{{ super() }}
+{% endblock %}

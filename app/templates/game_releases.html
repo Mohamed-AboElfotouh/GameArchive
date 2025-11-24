@@ -1,0 +1,223 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .game-header {
+        background-color: #f8f9fa;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        border-bottom: 3px solid transparent;
+        margin-right: 1rem;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--important-text);
+        border-bottom-color: var(--important-text);
+        background-color: transparent;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: var(--important-text);
+    }
+
+    .release-card {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--regular-text);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-radius: 6px;
+    }
+
+    .release-platform {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--regular-text);
+        margin-bottom: 1rem;
+    }
+
+    .release-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #212529;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .badge-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        background-color: #e9ecef;
+        color: #212529;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+
+    .no-releases {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block title %}{{ game.Name }} - Releases - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Game Header -->
+<div class="game-header">
+    <div class="container">
+        <h1 class="mb-3">{{ game.Name }}</h1>
+    </div>
+</div>
+
+<!-- Navigation Tabs -->
+<div class="container">
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a href="{{ url_for('main.game_detail', game_id=game.ID) }}" class="nav-link">
+                Overview
+            </a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" type="button" disabled>
+                Releases
+            </button>
+        </li>
+    </ul>
+</div>
+
+<!-- Releases Content -->
+<div class="container pb-5">
+    {% if releases %}
+        <div class="releases-list">
+            {% for release in releases %}
+                <div class="release-card">
+                    <div class="release-platform">
+                        {{ release.platform }}
+                    </div>
+
+                    <div class="release-info">
+                        <!-- Release Date -->
+                        {% if release.date %}
+                            <div class="info-item">
+                                <span class="info-label">Release Date</span>
+                                <span class="info-value">{{ release.date.strftime('%B %d, %Y') if release.date else 'Unknown' }}</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Price -->
+                        {% if release.price %}
+                            <div class="info-item">
+                                <span class="info-label">Price</span>
+                                <span class="info-value">${{ "%.2f"|format(release.price) }}</span>
+                            </div>
+                        {% else %}
+                            <div class="info-item">
+                                <span class="info-label">Price</span>
+                                <span class="info-value text-muted">N/A</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Business Model -->
+                        {% if release.business_model %}
+                            <div class="info-item">
+                                <span class="info-label">Business Model</span>
+                                <span class="info-value">{{ release.business_model }}</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- Maturity Rating -->
+                        {% if release.maturity_rating %}
+                            <div class="info-item">
+                                <span class="info-label">Maturity Rating</span>
+                                <span class="info-value">{{ release.maturity_rating }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Ratings -->
+                    <div class="release-info">
+                        <!-- Critic Rating -->
+                        {% if release.critic_rating %}
+                            <div class="info-item">
+                                <span class="info-label">Critic Rating</span>
+                                <span class="info-value">{{ release.critic_rating }}%</span>
+                            </div>
+                        {% endif %}
+
+                        <!-- User Rating -->
+                        {% if release.user_rating %}
+                            <div class="info-item">
+                                <span class="info-label">User Rating</span>
+                                <span class="info-value">{{ release.user_rating }}/5</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Media Types -->
+                    {% if release.media_types %}
+                        <div class="info-item" style="margin-bottom: 1rem;">
+                            <span class="info-label">Media Types</span>
+                            <div class="badge-group" style="margin-top: 0.5rem;">
+                                {% for media_type in release.media_types %}
+                                    <span class="badge-custom">{{ media_type }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Input Devices -->
+                    {% if release.input_devices %}
+                        <div class="info-item">
+                            <span class="info-label">Input Devices</span>
+                            <div class="badge-group" style="margin-top: 0.5rem;">
+                                {% for input_device in release.input_devices %}
+                                    <span class="badge-custom">{{ input_device }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-releases">
+            <h4>No Release Information Available</h4>
+            <p class="text-muted">This game doesn't have any platform release information yet.</p>
+            <a href="{{ url_for('main.game_details', game_id=game.ID) }}" class="btn btn-danger mt-3">
+                Back to Game Details
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

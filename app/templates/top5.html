@@ -1,0 +1,217 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .top5-header {
+        background: var(--regular-text);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .top5-header h1 {
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        color: var(--black);
+    }
+
+    .top5-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .options-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .option-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .option-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .option-card-header {
+        background: var(--important-text)
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .option-card-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .option-card-body {
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .option-description {
+        font-size: 0.95rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+
+    .option-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-option {
+        display: inline-block;
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.8rem 2rem;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-option:hover {
+        background-color: #c82333;
+        text-decoration: none;
+        color: white;
+    }
+
+    .info-section {
+        background-color: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-top: 3rem;
+    }
+
+    .info-section h3 {
+        color: var(--important-text);
+        margin-bottom: 1rem;
+    }
+
+    .info-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .info-section li {
+        padding: 0.5rem 0;
+        color: #495057;
+    }
+
+    .info-section li:before {
+        content: "✓ ";
+        color: var(--important-text);
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Top 5 Rankings - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="top5-header">
+    <div class="container">
+        <h1>🏆 Top 5 Rankings 🏆</h1>
+        <p>Explore the best games and creators in various categories</p>
+    </div>
+</div>
+
+<!-- Options Grid -->
+<div class="container pb-5">
+    <div class="options-grid">
+        <!-- Top 5 Games by Genre -->
+        <div class="option-card">
+            <div class="option-card-header">
+                <h4 class="option-card-title">🎮 Top Games by Genre</h4>
+            </div>
+            <div class="option-card-body">
+                <div class="option-description">
+                    Discover the top 5 video games in each genre ranked by MobyScore. See which games dominate each category.
+                </div>
+                <a href="{{ url_for('main.top5_games_by_genre') }}" class="btn-custom">
+                    View Rankings
+                </a>
+            </div>
+        </div>
+
+        <!-- Top 5 Games by Setting -->
+        <div class="option-card">
+            <div class="option-card-header">
+                <h4 class="option-card-title">🌍 Top Games by Setting</h4>
+            </div>
+            <div class="option-card-body">
+                <div class="option-description">
+                    Explore the top 5 video games in each setting ranked by MobyScore. Find the best games for every environment.
+                </div>
+                <a href="{{ url_for('main.top5_games_by_setting') }}" class="btn-custom">
+                    View Rankings
+                </a>
+            </div>
+        </div>
+
+        <!-- Top 5 Companies by Genre -->
+        <div class="option-card">
+            <div class="option-card-header">
+                <h4 class="option-card-title">🏢 Top Companies by Genre</h4>
+            </div>
+            <div class="option-card-body">
+                <div class="option-description">
+                    See which development companies receive the highest critic ratings in each genre. Discover the industry leaders.
+                </div>
+                <a href="{{ url_for('main.top5_companies_by_genre') }}" class="btn-custom">
+                    View Rankings
+                </a>
+            </div>
+        </div>
+
+        <!-- Top 5 Directors by Volume -->
+        <div class="option-card">
+            <div class="option-card-header">
+                <h4 class="option-card-title">👨‍🎬 Most Prolific Directors</h4>
+            </div>
+            <div class="option-card-body">
+                <div class="option-description">
+                    Meet the top 5 game directors who have created the most games. See who has been most influential in game design.
+                </div>
+                <a href="{{ url_for('main.top5_directors_by_volume') }}" class="btn-custom">
+                    View Rankings
+                </a>
+            </div>
+        </div>
+
+        <!-- Top 5 Collaborations by Volume -->
+        <div class="option-card">
+            <div class="option-card-header">
+                <h4 class="option-card-title">🤝 Most Frequent Collaborations</h4>
+            </div>
+            <div class="option-card-body">
+                <div class="option-description">
+                    See the most frequent director-developement company collaborations that'd shaped modern gaming history.
+                </div>
+                <a href="{{ url_for('main.top5_collaborations') }}" class="btn-custom">
+                    View Rankings
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ super() }}
+{% endblock %}

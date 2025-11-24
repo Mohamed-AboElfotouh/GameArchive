@@ -1,0 +1,136 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .genre-header {
+        background-color: #f8f9fa;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .nav-tabs .nav-link {
+        color: #6c757d;
+        border: none;
+        border-bottom: 3px solid transparent;
+        margin-right: 1rem;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--important-text);
+        border-bottom-color: var(--important-text);
+        background-color: transparent;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: var(--important-text);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background-color: white;
+        padding: 1.5rem;
+        border-left: 4px solid var(--important-text);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--important-text);
+    }
+
+    .rating-badge {
+        display: inline-block;
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .na-text {
+        color: #999;
+        font-style: italic;
+    }
+</style>
+{% endblock %}
+
+{% block title %}{{ genre.name|capitalize }} - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Genre Header -->
+<div class="genre-header">
+    <div class="container">
+        <h1 class="mb-3">{{ genre.name|capitalize }}</h1>
+        <p class="text-muted">{{ genre.type|capitalize }} - {{ genre.num_games }} games</p>
+    </div>
+</div>
+
+<!-- Navigation Tabs -->
+<div class="container">
+    <ul class="nav nav-tabs mb-4" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="true">
+                Overview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a href="{{ url_for('main.genre_games', genre_type=genre.type, name=genre.name | urlencode) }}" class="nav-link">
+                Games
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- Tab Content -->
+<div class="tab-content">
+    <!-- Overview Tab -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        <div class="container pb-5">
+            <div class="stats-grid">
+                <!-- Total Games -->
+                <div class="stat-box">
+                    <div class="stat-label">Total Games</div>
+                    <div class="stat-value">{{ genre.num_games }}</div>
+                </div>
+
+                <!-- Average Critic Rating -->
+                {% if genre.avg_critic %}
+                    <div class="stat-box">
+                        <div class="stat-label">Avg Critic Rating</div>
+                        <div class="stat-value">{{ genre.avg_critic }}%</div>
+                    </div>
+                {% endif %}
+
+                <!-- Average User Rating -->
+                {% if genre.avg_user %}
+                    <div class="stat-box">
+                        <div class="stat-label">Avg User Rating</div>
+                        <div class="stat-value">{{ genre.avg_user }}/5</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ super() }}
+{% endblock %}

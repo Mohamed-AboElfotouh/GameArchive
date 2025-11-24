@@ -1,0 +1,352 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .company-header {
+        background-color: #f8f9fa;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+    }
+
+    .company-logo {
+        max-width: 200px;
+        height: 150px;
+        object-fit: contain;
+        margin-bottom: 1.5rem;
+    }
+
+    .company-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .info-box {
+        background-color: white;
+        padding: 1.5rem;
+        border-left: 4px solid var(--important-text);
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .info-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-value {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #212529;
+    }
+
+    .overview-text {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: #495057;
+        margin-top: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--important-text);
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--important-text);
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .game-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .game-card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .game-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .game-image-placeholder {
+        width: 100%;
+        height: 200px;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+
+    .game-info {
+        padding: 1rem;
+    }
+
+    .game-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 0.5rem;
+        word-break: break-word;
+    }
+
+    .game-score {
+        display: inline-block;
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .no-games {
+        text-align: center;
+        padding: 2rem;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--important-text);
+    }
+
+    .stat-value.rating {
+        font-size: 1.5rem;
+    }
+
+    .rating-badge {
+        display: inline-block;
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    .na-text {
+        color: #999;
+        font-style: italic;
+    }
+</style>
+{% endblock %}
+
+{% block title %}{{ company.Name }} - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Company Header -->
+<div class="company-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 text-center">
+                {% if company.Logo %}
+                    <img src="{{ company.Logo }}" alt="{{ company.Name }}" class="company-logo">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <h1 class="mb-2">{{ company.Name }}</h1>
+                <div class="company-info">
+                    {% if company.Country %}
+                        <div class="info-box">
+                            <div class="info-label">Country</div>
+                            <div class="info-value">{{ company.Country }}</div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if company.Overview %}
+                    <p class="overview-text">{{ company.Overview }}</p>
+                {% endif %}
+                {% if websites %}
+                    <div class="mt-3">
+                        <div class="info-label">Official Websites</div>
+                        <div>
+                            {% for website in websites %}
+                                <a href="{{ website }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-danger mb-2">
+                                    {{ website }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Developed Games Section -->
+    {% if developed_games %}
+        <div class="mb-5">
+            <h2 class="section-title">Developed Games</h2>
+            
+            <!-- Stats for Developed Games -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">Total Games Developed</div>
+                    <div class="stat-value">{{ num_games_developed }}</div>
+                </div>
+                {% if dev_avg_critic_rating %}
+                    <div class="stat-item">
+                        <div class="stat-label">Avg Critic Rating</div>
+                        <div class="stat-value rating">{{ dev_avg_critic_rating }}%</div>
+                    </div>
+                {% endif %}
+                {% if dev_avg_user_rating %}
+                    <div class="stat-item">
+                        <div class="stat-label">Avg User Rating</div>
+                        <div class="stat-value rating">{{ dev_avg_user_rating }}/5</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Developed Games Grid -->
+            <div class="games-grid">
+                {% for game in developed_games %}
+                    <a href="{{ url_for('main.game_detail', game_id=game.id) }}" class="game-card-link">
+                        <div class="game-card">
+                            {% if game.image %}
+                                <img src="{{ game.image }}" alt="{{ game.name }}" class="game-image">
+                            {% else %}
+                                <div class="game-image-placeholder">
+                                    <p class="m-0">No Image</p>
+                                </div>
+                            {% endif %}
+                            <div class="game-info">
+                                <div class="game-title">{{ game.name }}</div>
+                                {% if game.score %}
+                                    <span class="game-score">{{ game.score }}/10</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="mb-5">
+            <h2 class="section-title">Developed Games</h2>
+            <div class="no-games">
+                <p>This company has not developed any games.</p>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Published Games Section -->
+    {% if published_games %}
+        <div class="mb-5">
+            <h2 class="section-title">Published Games</h2>
+            
+            <!-- Stats for Published Games -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-label">Total Games Published</div>
+                    <div class="stat-value">{{ num_games_published }}</div>
+                </div>
+                {% if pub_avg_critic_rating %}
+                    <div class="stat-item">
+                        <div class="stat-label">Avg Critic Rating</div>
+                        <div class="stat-value rating">{{ pub_avg_critic_rating }}%</div>
+                    </div>
+                {% endif %}
+                {% if pub_avg_user_rating %}
+                    <div class="stat-item">
+                        <div class="stat-label">Avg User Rating</div>
+                        <div class="stat-value rating">{{ pub_avg_user_rating }}/5</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Published Games Grid -->
+            <div class="games-grid">
+                {% for game in published_games %}
+                    <a href="{{ url_for('main.game_detail', game_id=game.id) }}" class="game-card-link">
+                        <div class="game-card">
+                            {% if game.image %}
+                                <img src="{{ game.image }}" alt="{{ game.name }}" class="game-image">
+                            {% else %}
+                                <div class="game-image-placeholder">
+                                    <p class="m-0">No Image</p>
+                                </div>
+                            {% endif %}
+                            <div class="game-info">
+                                <div class="game-title">{{ game.name }}</div>
+                                {% if game.score %}
+                                    <span class="game-score">{{ game.score }}/10</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="mb-5">
+            <h2 class="section-title">Published Games</h2>
+            <div class="no-games">
+                <p>This company has not published any games.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

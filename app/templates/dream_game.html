@@ -1,0 +1,376 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .dream-game-header {
+        background: var(--regular-text);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .dream-game-header h1 {
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        color: var(--black);
+    }
+
+    .dream-game-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .attribute-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .attribute-card {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--important-text);
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .attribute-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .attribute-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.75rem;
+    }
+
+    .attribute-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 0.5rem;
+    }
+
+    .attribute-rating {
+        display: inline-block;
+        background-color: #ffc107;
+        color: var(--black);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+    .company-card {
+        text-align: center;
+    }
+
+    .company-logo {
+        max-width: 100%;
+        height: 100px;
+        object-fit: contain;
+        margin-bottom: 1rem;
+    }
+
+    .company-name{
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .company-name a{
+        color: var(--regular-text);
+    }
+
+    .company-name a:hover {
+        color: var(--black);
+    }
+
+    .director-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .director-picture {
+        max-width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        border: 3px solid var(--important-text);
+    }
+
+    .director-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .director-name a {
+        color: var(--regular-text);
+    }
+    .director-name a:hover {
+        color: var(--black);
+    }
+    .director-bio {
+        font-size: 0.9rem;
+        color: #6c757d;
+        text-align: center;
+        line-height: 1.5;
+    }
+
+    .rating-badge {
+        display: inline-block;
+        background-color: #ffc107;
+        color: #212529;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-top: 0.75rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--important-text);
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--important-text);
+    }
+
+    .na-value {
+        color: #999;
+        font-style: italic;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Your Dream Game - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="dream-game-header">
+    <h1>🎮 Your Dream Game 🎮</h1>
+    <p>The Perfect Game Composed of the Users' Best-Rated Components</p>
+</div>
+
+<div class="container pb-5">
+    <!-- Companies Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Studios</h2>
+        <div class="attribute-grid">
+            <!-- Developer -->
+            <div class="attribute-card company-card">
+                <div class="attribute-label">Best Developer</div>
+                {% if dream_game.developer.logo %}
+                    <img src="{{ dream_game.developer.logo }}" alt="{{ dream_game.developer.name }}" class="company-logo">
+                {% endif %}
+                <div class="company-name">
+                        <a href="{{ url_for('main.company_detail', company_id=dream_game.developer.id) }}" class="text-decoration-none">
+                            {{ dream_game.developer.name }}
+                        </a>
+                </div>
+                {% if dream_game.developer.rating %}
+                    <span class="rating-badge">{{ dream_game.developer.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Publisher -->
+            <div class="attribute-card company-card">
+                <div class="attribute-label">Best Publisher</div>
+                {% if dream_game.publisher.logo %}
+                    <img src="{{ dream_game.publisher.logo }}" alt="{{ dream_game.publisher.name }}" class="company-logo">
+                {% endif %}
+                <div class="company-name">
+                        <a href="{{ url_for('main.company_detail', company_id=dream_game.publisher.id) }}" class="text-decoration-none">
+                            {{ dream_game.publisher.name }}
+                        </a>
+                </div>
+                {% if dream_game.publisher.rating %}
+                    <span class="rating-badge">{{ dream_game.publisher.rating }}/5</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Director Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Creative Leadership</h2>
+        <div class="attribute-card director-card" style="max-width: 400px; margin: 0 auto;">
+            <div class="attribute-label" style="text-align: center;">Best Director</div>
+            {% if dream_game.director.picture %}
+                <img src="{{ dream_game.director.picture }}" alt="{{ dream_game.director.name }}" class="director-picture">
+            {% endif %}
+            <div class="director-name">
+                {% if dream_game.director.id %}
+                    <a href="{{ url_for('main.director_detail', director_id=dream_game.director.id) }}" class="text-decoration-none">
+                        {{ dream_game.director.name }}
+                    </a>
+                {% else %}
+                    <span class="na-value">{{ dream_game.director.name }}</span>
+                {% endif %}
+            </div>
+            {% if dream_game.director.bio %}
+                <p class="director-bio">{{ dream_game.director.bio }}</p>
+            {% endif %}
+            {% if dream_game.director.rating %}
+                <span class="rating-badge" style="display: block; text-align: center;">{{ dream_game.director.rating }}/5</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Game Attributes Section -->
+    <div class="mb-5">
+        <h2 class="section-title">Game Characteristics</h2>
+        <div class="attribute-grid">
+            <!-- Genre -->
+            <div class="attribute-card">
+                <div class="attribute-label">Genre</div>
+                <div class="attribute-value">
+                    {% if dream_game.genre.name != 'N/A' %}
+                        {{ dream_game.genre.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.genre.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.genre.rating %}
+                    <span class="attribute-rating">{{ dream_game.genre.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Gameplay -->
+            <div class="attribute-card">
+                <div class="attribute-label">Gameplay</div>
+                <div class="attribute-value">
+                    {% if dream_game.gameplay.name != 'N/A' %}
+                        {{ dream_game.gameplay.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.gameplay.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.gameplay.rating %}
+                    <span class="attribute-rating">{{ dream_game.gameplay.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Perspective -->
+            <div class="attribute-card">
+                <div class="attribute-label">Perspective</div>
+                <div class="attribute-value">
+                    {% if dream_game.perspective.name != 'N/A' %}
+                        {{ dream_game.perspective.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.perspective.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.perspective.rating %}
+                    <span class="attribute-rating">{{ dream_game.perspective.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Visual -->
+            <div class="attribute-card">
+                <div class="attribute-label">Visual Style</div>
+                <div class="attribute-value">
+                    {% if dream_game.visual.name != 'N/A' %}
+                        {{ dream_game.visual.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.visual.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.visual.rating %}
+                    <span class="attribute-rating">{{ dream_game.visual.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Interface -->
+            <div class="attribute-card">
+                <div class="attribute-label">Interface</div>
+                <div class="attribute-value">
+                    {% if dream_game.interface.name != 'N/A' %}
+                        {{ dream_game.interface.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.interface.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.interface.rating %}
+                    <span class="attribute-rating">{{ dream_game.interface.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Narrative -->
+            <div class="attribute-card">
+                <div class="attribute-label">Narrative Theme</div>
+                <div class="attribute-value">
+                    {% if dream_game.narrative.name != 'N/A' %}
+                        {{ dream_game.narrative.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.narrative.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.narrative.rating %}
+                    <span class="attribute-rating">{{ dream_game.narrative.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Pacing -->
+            <div class="attribute-card">
+                <div class="attribute-label">Pacing</div>
+                <div class="attribute-value">
+                    {% if dream_game.pacing.name != 'N/A' %}
+                        {{ dream_game.pacing.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.pacing.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.pacing.rating %}
+                    <span class="attribute-rating">{{ dream_game.pacing.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Setting -->
+            <div class="attribute-card">
+                <div class="attribute-label">Setting</div>
+                <div class="attribute-value">
+                    {% if dream_game.setting.name != 'N/A' %}
+                        {{ dream_game.setting.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.setting.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.setting.rating %}
+                    <span class="attribute-rating">{{ dream_game.setting.rating }}/5</span>
+                {% endif %}
+            </div>
+
+            <!-- Art -->
+            <div class="attribute-card">
+                <div class="attribute-label">Art Style</div>
+                <div class="attribute-value">
+                    {% if dream_game.art.name != 'N/A' %}
+                        {{ dream_game.art.name }}
+                    {% else %}
+                        <span class="na-value">{{ dream_game.art.name }}</span>
+                    {% endif %}
+                </div>
+                {% if dream_game.art.rating %}
+                    <span class="attribute-rating">{{ dream_game.art.rating }}/5</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ super() }}
+{% endblock %}

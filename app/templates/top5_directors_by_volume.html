@@ -1,0 +1,279 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .top5-header {
+        background: var(--regular-text);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .top5-header h1 {
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        color: var(--black);
+    }
+
+    .top5-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .top5-header a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 1rem;
+        display: inline-block;
+    }
+
+    .top5-header a:hover {
+        text-decoration: underline;
+    }
+
+    .directors-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .director-card {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .director-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .director-card a {
+        text-decoration: none;
+        color: inherit;
+        display: contents;
+    }
+
+    .rank-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: var(--important-text);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.3rem;
+        z-index: 10;
+    }
+
+    .director-image-container {
+        position: relative;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .director-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        min-height: 150px;
+    }
+
+    .director-picture-placeholder {
+        width: 100%;
+        height: 150px;
+        background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .director-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .director-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #212529;
+        margin-bottom: 0.5rem;
+    }
+
+    .director-name {
+        color: var(--important-text);
+        text-decoration: none;
+    }
+
+    .games-count {
+        display: inline-block;
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        width: fit-content;
+    }
+
+    .director-biography {
+        font-size: 0.95rem;
+        color: #6c757d;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .view-button {
+        display: inline-block;
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        width: fit-content;
+    }
+
+    .view-button:hover {
+        background-color: #c82333;
+        text-decoration: none;
+        color: var(--important-text);
+    }
+
+    .back-button {
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 2rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #c82333;
+        text-decoration: none;
+        color: white;
+    }
+
+    .no-directors {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stats-info {
+        background-color: #f8f9fa;
+        padding: 1rem 1.5rem;
+        border-left: 4px solid var(--important-text);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+    }
+
+    .stats-info strong {
+        color: var(--important-text);
+    }
+
+    @media (max-width: 768px) {
+        .director-card {
+            grid-template-columns: 1fr;
+        }
+
+        .director-image-container {
+            max-height: 200px;
+        }
+
+        .director-picture-placeholder {
+            height: 200px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block title %}Top 5 Most Prolific Directors - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="top5-header">
+    <div class="container">
+        <h1>👨‍🎬 Top 5 Most Prolific Directors</h1>
+        <p>The game directors who have directed the most games</p>
+        <a href="{{ url_for('main.top5') }}">← Back to Top 5 Rankings</a>
+    </div>
+</div>
+
+<!-- Rankings -->
+<div class="container pb-5">
+
+    {% if directors_data %}
+        <div class="directors-container">
+            {% for director in directors_data %}
+                <div class="director-card">
+                    <div class="director-image-container">
+                        <div class="rank-badge">#{{ loop.index }}</div>
+                        {% if director.ProfilePicture %}
+                            <img src="{{ director.ProfilePicture }}" alt="{{ director.Name }}" class="director-picture">
+                        {% else %}
+                            <div class="director-picture-placeholder">
+                                <p class="m-0">No Image</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="director-content">
+                        <div>
+                            <h3 class="director-name">
+                                {{ director.Name }}
+                            </h3>
+                            <span class="games-count">{{ director.games_directed }} Games Directed</span>
+                            {% if director.Biography %}
+                                <p class="director-biography">{{ director.Biography }}</p>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('main.director_detail', director_id=director.ID) }}" class="view-button">
+                            View Profile →
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-directors">
+            <h4>No Directors Available</h4>
+            <p>There are no directors with game credits at this time.</p>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "my_base.html" %}
+
+
+
+{% block title %}Directors - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Games Section -->
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-2">Directors</h1>
+        <p>Browse all {{ directors.total }} directors in the GameArchive database</p>
+
+        {% if directors.items %}
+            <div class="row g-4 mb-5">
+                {% for director in directors.items %}
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <a class="game-card_link" href="{{ url_for('main.director_detail', director_id=director.ID) }}">
+                        <div class="card h-100 shadow-sm game-card">
+                            {% if director.ProfilePicture %}
+                                <img src="{{ director.ProfilePicture }}" class="card-img-top" alt="{{ director.Name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background-color: #f8f9fa;">
+                                    <p class="text-muted">No Profile Picture</p>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title" style="color: var(--regular-text);">{{ director.Name }}</h5>
+                                <span class="badge" style="background-color: var(--regular-text);">{{ director.games_num }} games directed</span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if directors.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.directors', page=directors.prev_num) }}">← Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">← Previous</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ directors.page }} of {{ directors.pages }}</span>
+                    </li>
+
+                    {% if directors.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('main.directors', page=directors.next_num) }}">Next →</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next →</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="alert alert-info text-center">
+                <p>No directors found.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{{ super() }}
+{% endblock %}

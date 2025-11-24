@@ -1,0 +1,216 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .top5-header {
+        background: var(--regular-text);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .top5-header h1 {
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        color: var(--black);
+    }
+
+    .top5-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .top5-header a {
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 1rem;
+        display: inline-block;
+    }
+
+    .top5-header a:hover {
+        text-decoration: underline;
+    }
+
+    .setting-section {
+        margin-bottom: 4rem;
+    }
+
+    .setting-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--important-text);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid var(--important-text);
+    }
+
+    .games-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .rank-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: var(--important-text);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        z-index: 10;
+    }
+
+    .game-card {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .game-card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .game-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .game-image-placeholder {
+        width: 100%;
+        height: 200px;
+        background-color: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6c757d;
+    }
+
+    .game-info {
+        padding: 1rem;
+    }
+
+    .game-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 0.5rem;
+        word-break: break-word;
+    }
+
+    .game-score {
+        display: inline-block;
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .no-settings {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .back-button {
+        background-color: var(--important-text);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 2rem;
+        transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+        background-color: #c82333;
+        text-decoration: none;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Top 5 Games by Setting - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="top5-header">
+    <div class="container">
+        <h1>🏆 Top 5 Games by Setting</h1>
+        <p>The highest-rated games in each setting by MobyScore</p>
+        <a href="{{ url_for('main.top5') }}">← Back to Top 5 Rankings</a>
+    </div>
+</div>
+
+<!-- Rankings -->
+<div class="container pb-5">
+
+    {% if settings_data %}
+        {% for setting, games in settings_data.items() %}
+            <div class="setting-section">
+                <h2 class="setting-title">{{ setting }}</h2>
+                
+                <div class="games-list">
+                    {% for game in games %}
+                        <a href="{{ url_for('main.game_detail', game_id=game.id) }}" class="game-card-link">
+                            <div class="game-card">
+                                <div class="rank-badge">#{{ loop.index }}</div>
+                                {% if game.image %}
+                                    <img src="{{ game.image }}" alt="{{ game.name }}" class="game-image">
+                                {% else %}
+                                    <div class="game-image-placeholder">
+                                        <p class="m-0">No Image</p>
+                                    </div>
+                                {% endif %}
+                                <div class="game-info">
+                                    <div class="game-title">{{ game.name }}</div>
+                                    {% if game.score %}
+                                        <span class="game-score">{{ game.score }}/10</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">N/A</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-settings">
+            <h4>No Rankings Available</h4>
+            <p>There are no settings with games available at this time.</p>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

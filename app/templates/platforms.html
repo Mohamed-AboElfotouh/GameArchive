@@ -1,0 +1,116 @@
+{% extends "my_base.html" %}
+
+{% block head %}
+{{ super() }}
+<style>
+    .platforms-header {
+        background: var(--important-text);
+        padding: 3rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .platforms-header h1 {
+        color: var(--black);
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .platforms-header p {
+        margin: 0;
+        opacity: 0.9;
+        color: var(--black);
+    }
+
+    .platforms-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    .platform-card {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--important-text);
+        padding: 2rem 1.5rem;
+        border-radius: 8px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .platform-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .platform-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .platform-name {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #212529;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-height: 2.6rem;
+    }
+
+    .btn-custom {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }
+
+
+    .no-platforms {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block title %}Platforms - GameArchive{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="platforms-header">
+    <div class="container">
+        <h1>Platforms</h1>
+        <p>Explore games across all gaming platforms</p>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if platforms %}
+        <div class="platforms-grid">
+            {% for platform in platforms %}
+                <div class="platform-card">
+                    <div class="platform-name">{{ platform }}</div>
+                    <a href="{{ url_for('main.platform_detail', platform_name=platform | urlencode) }}" class="btn-custom">
+                        Explore Games
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-platforms">
+            <h4>No Platforms Available</h4>
+            <p>There are currently no platforms in the database.</p>
+        </div>
+    {% endif %}
+</div>
+
+{{ super() }}
+{% endblock %}

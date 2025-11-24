@@ -1,0 +1,27 @@
+{% extends "my_base.html" %}
+
+{% block title %}Welcome to GameArchive{% endblock %}
+
+
+{% block content %}
+<section class="hero">
+        <div class="hero-content">
+            <h1>Welcome to GameArchive</h1>
+            <p>Discover, rate, and explore the world's most popular video games</p>
+
+            <div class="button-group">
+                {% if not session.get('username') %}
+                    <a href="{{ url_for('main.login') }}" class="btn btn-custom">Login</a>
+                    <a href="{{ url_for('main.create_account') }}" class="btn btn-custom">Sign Up</a>
+                {% else %}
+                    <a href="{{ url_for('main.main_page') }}" class="btn btn-primary">Browse Games</a>
+                    <a href="{{ url_for('main.dream_game') }}" class="btn btn-primary">Create Dream Game</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+{{ super() }}
+{% endblock %}
+
